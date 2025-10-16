@@ -1,31 +1,17 @@
 syntax = "proto3";
-option go_package = "SimpleService/grpc/proto";   //ændre simpleservice til ChitChat?
+option go_package = "ChitChat/grpc/proto";   //ændre simpleservice til ChitChat?
 
-message Join {
-    int32 LogicalTime = 1;
-    string participantName = 2;
-  }
-
-  message Leave {
-    int32 LogicalTime = 1;
-    string participantName = 2;
-  }
-
-  message Chat {
-    int32 LogicalTime = 1;
-    string text = 2;
-    string senderName = 3;
-  }
-
-service ChitChat{
-    rpc JoinChat(participantName) returns (Join) {}
-    rpc SendMessage(relevantChatInfo) returns (Chat) {}
-}
-message participantName{
-  string Join = 2;
-}
-
-message relevantChatInfo{
+message ChatIn{
+  string sender = 1;
   string text = 2;
-  string Username = 3;
+}
+
+message ChatOut{
+  string sender = 1;
+  string text = 2;
+  int64 ts = 3;
+}
+
+service ChitChat {
+  rpc Chat(stream ChatIn) returns (stream ChatOut);
 }

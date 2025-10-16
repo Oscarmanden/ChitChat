@@ -1,31 +1,64 @@
 package main
 
 import (
-	proto "SimpleService/grpc"
-	"context"
+	proto "ChitChat/grpc"
+	"fmt"
 	"log"
 	"net"
+	"time"
 
 	"google.golang.org/grpc"
 )
 
 type ChitChatDatabase struct {
 	proto.UnimplementedChitChatServer
+	clients map[string]*Client
+}
+type Client struct {
+	id   string
+	send chan *proto.ChatOut
 }
 
-func (c *ChitChatDatabase) JoinChat(ctx context.Context, req *proto.ParticipantName) (*proto.Join, error) {
-	return &proto.Join{
-		LogicalTime:     1324,
-		ParticipantName: req.Join,
-	}, nil
+func (s *ChitChatDatabase) addClient(c *Client) {
+	s.clients[c.id] = c
 }
 
-func (c *ChitChatDatabase) SendMessage(ctx context.Context, req *proto.RelevantChatInfo) (*proto.Chat, error) {
-	return &proto.Chat{
-		LogicalTime: 1324,
-		Text:        req.Text,
-		SenderName:  req.Username,
-	}, nil
+func NewServer() *ChitChatDatabase {
+	return &ChitChatDatabase{clients: make(map[string]*Client)}
+}
+
+func (s *ChitChatDatabase) Chat(stream proto.ChitChat_ChatServer) error {
+	clientId := fmt.Sprintf("%p", stream)
+	newClient := &Client{
+		id:   clientId,
+		send: make(chan *proto.ChatOut, 32),
+	}
+	s.addClient(newClient)
+	go func() {
+		for msg := range newClient.send {
+			if err := stream.Send(msg); err != nil {
+				return
+			}
+		}
+	}()
+
+	for {
+		in, err := stream.Recv()
+		if err != nil {
+			return err
+		}
+		out := &proto.ChatOut{
+			Sender: in.Sender,
+			Text:   in.Text,
+			Ts:     time.Now().Unix(),
+		}
+
+		for _, c := range s.clients {
+			select {
+			case c.send <- out:
+			}
+		}
+	}
 }
 
 func main() {
@@ -33,8 +66,10 @@ func main() {
 	if err != nil {
 		log.Fatalf("Lorte program det virker ikke")
 	}
+	NewServer()
 	grpcServer := grpc.NewServer()
-	svc := &ChitChatDatabase{}
+	svc := NewServer()
+
 	proto.RegisterChitChatServer(grpcServer, svc)
 	err = grpcServer.Serve(listener)
 	if err != nil {

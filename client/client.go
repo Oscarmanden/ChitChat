@@ -1,7 +1,7 @@
 package main
 
 import (
-	proto "SimpleService/grpc"
+	proto "ChitChat/grpc"
 	"bufio"
 	"context"
 	"fmt"
@@ -19,29 +19,27 @@ func main() {
 		log.Fatalf("Not working")
 	}
 
-	name, err := os.Hostname()
-
 	client := proto.NewChitChatClient(conn)
 
-	message, err := client.JoinChat(context.Background(), &proto.ParticipantName{Join: name})
+	Streamer, err := client.Chat(context.Background())
 	if err != nil {
-		log.Fatalf("Not working " + name + "is faulty" + err.Error())
+		log.Fatalf("Not working")
 	}
-
-	println(message.ParticipantName, message.LogicalTime)
-
-	reader := bufio.NewReader(os.Stdin)
+	go func() {
+		for {
+			msg, err := Streamer.Recv()
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+			fmt.Println(msg.Sender, "Said: ")
+			fmt.Println(">", msg.Text)
+		}
+	}()
 	for {
-		chatMessage, _ := reader.ReadString('\n')
-		req := &proto.RelevantChatInfo{
-			Text:     chatMessage,
-			Username: name,
-		}
-		resp, err := client.SendMessage(context.Background(), req)
-		if err != nil {
-			fmt.Println("SendMessage:", err)
-			continue
-		}
-		fmt.Println(resp.SenderName, "said: >", resp.Text, "@", resp.LogicalTime)
+		name, _ := os.Hostname()
+		reader := bufio.NewReader(os.Stdin)
+		line, _ := reader.ReadString('\n')
+		Streamer.Send(&proto.ChatIn{Sender: name, Text: line})
 	}
 }
