@@ -19,101 +19,101 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	SimpleService_GetSimpleMessage_FullMethodName = "/SimpleService/getSimpleMessage"
+	ChitChat_JoinChat_FullMethodName = "/ChitChat/JoinChat"
 )
 
-// SimpleServiceClient is the client API for SimpleService service.
+// ChitChatClient is the client API for ChitChat service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type SimpleServiceClient interface {
-	GetSimpleMessage(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloResponse, error)
+type ChitChatClient interface {
+	JoinChat(ctx context.Context, in *ParticipantName, opts ...grpc.CallOption) (*Join, error)
 }
 
-type simpleServiceClient struct {
+type chitChatClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewSimpleServiceClient(cc grpc.ClientConnInterface) SimpleServiceClient {
-	return &simpleServiceClient{cc}
+func NewChitChatClient(cc grpc.ClientConnInterface) ChitChatClient {
+	return &chitChatClient{cc}
 }
 
-func (c *simpleServiceClient) GetSimpleMessage(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloResponse, error) {
+func (c *chitChatClient) JoinChat(ctx context.Context, in *ParticipantName, opts ...grpc.CallOption) (*Join, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(HelloResponse)
-	err := c.cc.Invoke(ctx, SimpleService_GetSimpleMessage_FullMethodName, in, out, cOpts...)
+	out := new(Join)
+	err := c.cc.Invoke(ctx, ChitChat_JoinChat_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// SimpleServiceServer is the server API for SimpleService service.
-// All implementations must embed UnimplementedSimpleServiceServer
+// ChitChatServer is the server API for ChitChat service.
+// All implementations must embed UnimplementedChitChatServer
 // for forward compatibility.
-type SimpleServiceServer interface {
-	GetSimpleMessage(context.Context, *HelloRequest) (*HelloResponse, error)
-	mustEmbedUnimplementedSimpleServiceServer()
+type ChitChatServer interface {
+	JoinChat(context.Context, *ParticipantName) (*Join, error)
+	mustEmbedUnimplementedChitChatServer()
 }
 
-// UnimplementedSimpleServiceServer must be embedded to have
+// UnimplementedChitChatServer must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedSimpleServiceServer struct{}
+type UnimplementedChitChatServer struct{}
 
-func (UnimplementedSimpleServiceServer) GetSimpleMessage(context.Context, *HelloRequest) (*HelloResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetSimpleMessage not implemented")
+func (UnimplementedChitChatServer) JoinChat(context.Context, *ParticipantName) (*Join, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method JoinChat not implemented")
 }
-func (UnimplementedSimpleServiceServer) mustEmbedUnimplementedSimpleServiceServer() {}
-func (UnimplementedSimpleServiceServer) testEmbeddedByValue()                       {}
+func (UnimplementedChitChatServer) mustEmbedUnimplementedChitChatServer() {}
+func (UnimplementedChitChatServer) testEmbeddedByValue()                  {}
 
-// UnsafeSimpleServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to SimpleServiceServer will
+// UnsafeChitChatServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ChitChatServer will
 // result in compilation errors.
-type UnsafeSimpleServiceServer interface {
-	mustEmbedUnimplementedSimpleServiceServer()
+type UnsafeChitChatServer interface {
+	mustEmbedUnimplementedChitChatServer()
 }
 
-func RegisterSimpleServiceServer(s grpc.ServiceRegistrar, srv SimpleServiceServer) {
-	// If the following call pancis, it indicates UnimplementedSimpleServiceServer was
+func RegisterChitChatServer(s grpc.ServiceRegistrar, srv ChitChatServer) {
+	// If the following call pancis, it indicates UnimplementedChitChatServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&SimpleService_ServiceDesc, srv)
+	s.RegisterService(&ChitChat_ServiceDesc, srv)
 }
 
-func _SimpleService_GetSimpleMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(HelloRequest)
+func _ChitChat_JoinChat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ParticipantName)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(SimpleServiceServer).GetSimpleMessage(ctx, in)
+		return srv.(ChitChatServer).JoinChat(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: SimpleService_GetSimpleMessage_FullMethodName,
+		FullMethod: ChitChat_JoinChat_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SimpleServiceServer).GetSimpleMessage(ctx, req.(*HelloRequest))
+		return srv.(ChitChatServer).JoinChat(ctx, req.(*ParticipantName))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// SimpleService_ServiceDesc is the grpc.ServiceDesc for SimpleService service.
+// ChitChat_ServiceDesc is the grpc.ServiceDesc for ChitChat service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var SimpleService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "SimpleService",
-	HandlerType: (*SimpleServiceServer)(nil),
+var ChitChat_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "ChitChat",
+	HandlerType: (*ChitChatServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "getSimpleMessage",
-			Handler:    _SimpleService_GetSimpleMessage_Handler,
+			MethodName: "JoinChat",
+			Handler:    _ChitChat_JoinChat_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

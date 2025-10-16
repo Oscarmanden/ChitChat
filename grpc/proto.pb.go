@@ -21,27 +21,28 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type HelloRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Greeting      string                 `protobuf:"bytes,1,opt,name=greeting,proto3" json:"greeting,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+type Join struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	LogicalTime     int32                  `protobuf:"varint,1,opt,name=LogicalTime,proto3" json:"LogicalTime,omitempty"`
+	ParticipantName string                 `protobuf:"bytes,2,opt,name=participantName,proto3" json:"participantName,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
-func (x *HelloRequest) Reset() {
-	*x = HelloRequest{}
+func (x *Join) Reset() {
+	*x = Join{}
 	mi := &file_proto_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *HelloRequest) String() string {
+func (x *Join) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*HelloRequest) ProtoMessage() {}
+func (*Join) ProtoMessage() {}
 
-func (x *HelloRequest) ProtoReflect() protoreflect.Message {
+func (x *Join) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -53,39 +54,47 @@ func (x *HelloRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use HelloRequest.ProtoReflect.Descriptor instead.
-func (*HelloRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use Join.ProtoReflect.Descriptor instead.
+func (*Join) Descriptor() ([]byte, []int) {
 	return file_proto_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *HelloRequest) GetGreeting() string {
+func (x *Join) GetLogicalTime() int32 {
 	if x != nil {
-		return x.Greeting
+		return x.LogicalTime
+	}
+	return 0
+}
+
+func (x *Join) GetParticipantName() string {
+	if x != nil {
+		return x.ParticipantName
 	}
 	return ""
 }
 
-type HelloResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Reply         string                 `protobuf:"bytes,1,opt,name=reply,proto3" json:"reply,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+type Leave struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	LogicalTime     int32                  `protobuf:"varint,1,opt,name=LogicalTime,proto3" json:"LogicalTime,omitempty"`
+	ParticipantName string                 `protobuf:"bytes,2,opt,name=participantName,proto3" json:"participantName,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
-func (x *HelloResponse) Reset() {
-	*x = HelloResponse{}
+func (x *Leave) Reset() {
+	*x = Leave{}
 	mi := &file_proto_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *HelloResponse) String() string {
+func (x *Leave) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*HelloResponse) ProtoMessage() {}
+func (*Leave) ProtoMessage() {}
 
-func (x *HelloResponse) ProtoReflect() protoreflect.Message {
+func (x *Leave) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -97,14 +106,125 @@ func (x *HelloResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use HelloResponse.ProtoReflect.Descriptor instead.
-func (*HelloResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use Leave.ProtoReflect.Descriptor instead.
+func (*Leave) Descriptor() ([]byte, []int) {
 	return file_proto_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *HelloResponse) GetReply() string {
+func (x *Leave) GetLogicalTime() int32 {
 	if x != nil {
-		return x.Reply
+		return x.LogicalTime
+	}
+	return 0
+}
+
+func (x *Leave) GetParticipantName() string {
+	if x != nil {
+		return x.ParticipantName
+	}
+	return ""
+}
+
+type Chat struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	LogicalTime   int32                  `protobuf:"varint,1,opt,name=LogicalTime,proto3" json:"LogicalTime,omitempty"`
+	Text          string                 `protobuf:"bytes,2,opt,name=text,proto3" json:"text,omitempty"`
+	SenderName    string                 `protobuf:"bytes,3,opt,name=senderName,proto3" json:"senderName,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Chat) Reset() {
+	*x = Chat{}
+	mi := &file_proto_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Chat) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Chat) ProtoMessage() {}
+
+func (x *Chat) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Chat.ProtoReflect.Descriptor instead.
+func (*Chat) Descriptor() ([]byte, []int) {
+	return file_proto_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *Chat) GetLogicalTime() int32 {
+	if x != nil {
+		return x.LogicalTime
+	}
+	return 0
+}
+
+func (x *Chat) GetText() string {
+	if x != nil {
+		return x.Text
+	}
+	return ""
+}
+
+func (x *Chat) GetSenderName() string {
+	if x != nil {
+		return x.SenderName
+	}
+	return ""
+}
+
+type ParticipantName struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Join          string                 `protobuf:"bytes,2,opt,name=Join,proto3" json:"Join,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ParticipantName) Reset() {
+	*x = ParticipantName{}
+	mi := &file_proto_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ParticipantName) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ParticipantName) ProtoMessage() {}
+
+func (x *ParticipantName) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ParticipantName.ProtoReflect.Descriptor instead.
+func (*ParticipantName) Descriptor() ([]byte, []int) {
+	return file_proto_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *ParticipantName) GetJoin() string {
+	if x != nil {
+		return x.Join
 	}
 	return ""
 }
@@ -113,13 +233,23 @@ var File_proto_proto protoreflect.FileDescriptor
 
 const file_proto_proto_rawDesc = "" +
 	"\n" +
-	"\vproto.proto\"*\n" +
-	"\fHelloRequest\x12\x1a\n" +
-	"\bgreeting\x18\x01 \x01(\tR\bgreeting\"%\n" +
-	"\rHelloResponse\x12\x14\n" +
-	"\x05reply\x18\x01 \x01(\tR\x05reply2B\n" +
-	"\rSimpleService\x121\n" +
-	"\x10getSimpleMessage\x12\r.HelloRequest\x1a\x0e.HelloResponseB\x1aZ\x18SimpleService/grpc/protob\x06proto3"
+	"\vproto.proto\"R\n" +
+	"\x04Join\x12 \n" +
+	"\vLogicalTime\x18\x01 \x01(\x05R\vLogicalTime\x12(\n" +
+	"\x0fparticipantName\x18\x02 \x01(\tR\x0fparticipantName\"S\n" +
+	"\x05Leave\x12 \n" +
+	"\vLogicalTime\x18\x01 \x01(\x05R\vLogicalTime\x12(\n" +
+	"\x0fparticipantName\x18\x02 \x01(\tR\x0fparticipantName\"\\\n" +
+	"\x04Chat\x12 \n" +
+	"\vLogicalTime\x18\x01 \x01(\x05R\vLogicalTime\x12\x12\n" +
+	"\x04text\x18\x02 \x01(\tR\x04text\x12\x1e\n" +
+	"\n" +
+	"senderName\x18\x03 \x01(\tR\n" +
+	"senderName\"%\n" +
+	"\x0fparticipantName\x12\x12\n" +
+	"\x04Join\x18\x02 \x01(\tR\x04Join2/\n" +
+	"\bChitChat\x12#\n" +
+	"\bJoinChat\x12\x10.participantName\x1a\x05.JoinB\x1aZ\x18SimpleService/grpc/protob\x06proto3"
 
 var (
 	file_proto_proto_rawDescOnce sync.Once
@@ -133,14 +263,16 @@ func file_proto_proto_rawDescGZIP() []byte {
 	return file_proto_proto_rawDescData
 }
 
-var file_proto_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_proto_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_proto_proto_goTypes = []any{
-	(*HelloRequest)(nil),  // 0: HelloRequest
-	(*HelloResponse)(nil), // 1: HelloResponse
+	(*Join)(nil),            // 0: Join
+	(*Leave)(nil),           // 1: Leave
+	(*Chat)(nil),            // 2: Chat
+	(*ParticipantName)(nil), // 3: participantName
 }
 var file_proto_proto_depIdxs = []int32{
-	0, // 0: SimpleService.getSimpleMessage:input_type -> HelloRequest
-	1, // 1: SimpleService.getSimpleMessage:output_type -> HelloResponse
+	3, // 0: ChitChat.JoinChat:input_type -> participantName
+	0, // 1: ChitChat.JoinChat:output_type -> Join
 	1, // [1:2] is the sub-list for method output_type
 	0, // [0:1] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -159,7 +291,7 @@ func file_proto_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_proto_rawDesc), len(file_proto_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -5,45 +5,31 @@ import (
 	"context"
 	"log"
 	"net"
-	"time"
 
 	"google.golang.org/grpc"
 )
 
-type messageDatabaseServer struct {
-	proto.UnimplementedSimpleServiceServer
-	message string
+type ChitChatDatabase struct {
+	proto.UnimplementedChitChatServer
 }
 
-func (m *messageDatabaseServer) GetSimpleMessage(ctx context.Context, req *proto.HelloRequest) (*proto.HelloResponse, error) {
-	return &proto.HelloResponse{
-		Reply: m.message,
+func (c *ChitChatDatabase) JoinChat(ctx context.Context, req *proto.ParticipantName) (*proto.Join, error) {
+	return &proto.Join{
+		LogicalTime:     1324,
+		ParticipantName: req.Join,
 	}, nil
 }
 
 func main() {
-	server := &messageDatabaseServer{message: "ayo ayo"}
-	tm := time.Now()
-	server.message += " " + tm.Format("00:00:00")
-	//server.message += "%s" +
-
-	server.start_server()
-}
-
-func (s *messageDatabaseServer) start_server() {
-	grpcServer := grpc.NewServer()
 	listener, err := net.Listen("tcp", ":5050")
 	if err != nil {
 		log.Fatalf("Lorte program det virker ikke")
-
 	}
-
-	proto.RegisterSimpleServiceServer(grpcServer, s)
-
+	grpcServer := grpc.NewServer()
+	svc := &ChitChatDatabase{}
+	proto.RegisterChitChatServer(grpcServer, svc)
 	err = grpcServer.Serve(listener)
-
 	if err != nil {
-		log.Fatalf("pis hamrende lorte program det virker ikke")
+		log.Fatalf("pis hamrende lorte pgram det virker ikke")
 	}
-
 }
