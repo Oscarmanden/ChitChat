@@ -20,6 +20,14 @@ func (c *ChitChatDatabase) JoinChat(ctx context.Context, req *proto.ParticipantN
 	}, nil
 }
 
+func (c *ChitChatDatabase) SendMessage(ctx context.Context, req *proto.RelevantChatInfo) (*proto.Chat, error) {
+	return &proto.Chat{
+		LogicalTime: 1324,
+		Text:        req.Text,
+		SenderName:  req.Username,
+	}, nil
+}
+
 func main() {
 	listener, err := net.Listen("tcp", ":5050")
 	if err != nil {

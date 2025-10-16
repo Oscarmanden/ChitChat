@@ -19,7 +19,7 @@ message Join {
 
 service ChitChat{
     rpc JoinChat(participantName) returns (Join) {}
-    rpc SendMessage(stream relevantChatInfo) returns (Chat) {}
+    rpc SendMessage(relevantChatInfo) returns (Chat) {}
 }
 message participantName{
   string Join = 2;
@@ -27,5 +27,5 @@ message participantName{
 
 message relevantChatInfo{
   string text = 2;
-  string name = 3;
+  string Username = 3;
 }

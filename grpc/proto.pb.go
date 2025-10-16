@@ -232,7 +232,7 @@ func (x *ParticipantName) GetJoin() string {
 type RelevantChatInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Text          string                 `protobuf:"bytes,2,opt,name=text,proto3" json:"text,omitempty"`
-	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	Username      string                 `protobuf:"bytes,3,opt,name=Username,proto3" json:"Username,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -274,9 +274,9 @@ func (x *RelevantChatInfo) GetText() string {
 	return ""
 }
 
-func (x *RelevantChatInfo) GetName() string {
+func (x *RelevantChatInfo) GetUsername() string {
 	if x != nil {
-		return x.Name
+		return x.Username
 	}
 	return ""
 }
@@ -299,13 +299,13 @@ const file_proto_proto_rawDesc = "" +
 	"senderName\x18\x03 \x01(\tR\n" +
 	"senderName\"%\n" +
 	"\x0fparticipantName\x12\x12\n" +
-	"\x04Join\x18\x02 \x01(\tR\x04Join\":\n" +
+	"\x04Join\x18\x02 \x01(\tR\x04Join\"B\n" +
 	"\x10relevantChatInfo\x12\x12\n" +
-	"\x04text\x18\x02 \x01(\tR\x04text\x12\x12\n" +
-	"\x04name\x18\x03 \x01(\tR\x04name2Z\n" +
-	"\bChitChat\x12#\n" +
-	"\bJoinChat\x12\x10.participantName\x1a\x05.Join\x12)\n" +
-	"\vSendMessage\x12\x11.relevantChatInfo\x1a\x05.Chat(\x01B\x1aZ\x18SimpleService/grpc/protob\x06proto3"
+	"\x04text\x18\x02 \x01(\tR\x04text\x12\x1a\n" +
+	"\bUsername\x18\x03 \x01(\tR\bUsername2\\\n" +
+	"\bChitChat\x12%\n" +
+	"\bJoinChat\x12\x10.participantName\x1a\x05.Join\"\x00\x12)\n" +
+	"\vSendMessage\x12\x11.relevantChatInfo\x1a\x05.Chat\"\x00B\x1aZ\x18SimpleService/grpc/protob\x06proto3"
 
 var (
 	file_proto_proto_rawDescOnce sync.Once

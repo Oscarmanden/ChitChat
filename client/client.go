@@ -4,6 +4,7 @@ import (
 	proto "SimpleService/grpc"
 	"bufio"
 	"context"
+	"fmt"
 	"log"
 	"os"
 
@@ -28,8 +29,19 @@ func main() {
 	}
 
 	println(message.ParticipantName, message.LogicalTime)
+
 	reader := bufio.NewReader(os.Stdin)
 	for {
 		chatMessage, _ := reader.ReadString('\n')
+		req := &proto.RelevantChatInfo{
+			Text:     chatMessage,
+			Username: name,
+		}
+		resp, err := client.SendMessage(context.Background(), req)
+		if err != nil {
+			fmt.Println("SendMessage:", err)
+			continue
+		}
+		fmt.Println(resp.SenderName, "said: >", resp.Text, "@", resp.LogicalTime)
 	}
 }
