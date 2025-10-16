@@ -18,9 +18,14 @@ message Join {
   }
 
 service ChitChat{
-    rpc JoinChat(participantName) returns (Join);
-
+    rpc JoinChat(participantName) returns (Join) {}
+    rpc SendMessage(stream relevantChatInfo) returns (Chat) {}
 }
 message participantName{
   string Join = 2;
+}
+
+message relevantChatInfo{
+  string text = 2;
+  string name = 3;
 }

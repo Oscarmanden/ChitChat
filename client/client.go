@@ -2,6 +2,7 @@ package main
 
 import (
 	proto "SimpleService/grpc"
+	"bufio"
 	"context"
 	"log"
 	"os"
@@ -27,4 +28,8 @@ func main() {
 	}
 
 	println(message.ParticipantName, message.LogicalTime)
+	reader := bufio.NewReader(os.Stdin)
+	for {
+		chatMessage, _ := reader.ReadString('\n')
+	}
 }

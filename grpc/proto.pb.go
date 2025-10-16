@@ -229,6 +229,58 @@ func (x *ParticipantName) GetJoin() string {
 	return ""
 }
 
+type RelevantChatInfo struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Text          string                 `protobuf:"bytes,2,opt,name=text,proto3" json:"text,omitempty"`
+	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RelevantChatInfo) Reset() {
+	*x = RelevantChatInfo{}
+	mi := &file_proto_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RelevantChatInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RelevantChatInfo) ProtoMessage() {}
+
+func (x *RelevantChatInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RelevantChatInfo.ProtoReflect.Descriptor instead.
+func (*RelevantChatInfo) Descriptor() ([]byte, []int) {
+	return file_proto_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *RelevantChatInfo) GetText() string {
+	if x != nil {
+		return x.Text
+	}
+	return ""
+}
+
+func (x *RelevantChatInfo) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
 var File_proto_proto protoreflect.FileDescriptor
 
 const file_proto_proto_rawDesc = "" +
@@ -247,9 +299,13 @@ const file_proto_proto_rawDesc = "" +
 	"senderName\x18\x03 \x01(\tR\n" +
 	"senderName\"%\n" +
 	"\x0fparticipantName\x12\x12\n" +
-	"\x04Join\x18\x02 \x01(\tR\x04Join2/\n" +
+	"\x04Join\x18\x02 \x01(\tR\x04Join\":\n" +
+	"\x10relevantChatInfo\x12\x12\n" +
+	"\x04text\x18\x02 \x01(\tR\x04text\x12\x12\n" +
+	"\x04name\x18\x03 \x01(\tR\x04name2Z\n" +
 	"\bChitChat\x12#\n" +
-	"\bJoinChat\x12\x10.participantName\x1a\x05.JoinB\x1aZ\x18SimpleService/grpc/protob\x06proto3"
+	"\bJoinChat\x12\x10.participantName\x1a\x05.Join\x12)\n" +
+	"\vSendMessage\x12\x11.relevantChatInfo\x1a\x05.Chat(\x01B\x1aZ\x18SimpleService/grpc/protob\x06proto3"
 
 var (
 	file_proto_proto_rawDescOnce sync.Once
@@ -263,18 +319,21 @@ func file_proto_proto_rawDescGZIP() []byte {
 	return file_proto_proto_rawDescData
 }
 
-var file_proto_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_proto_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_proto_proto_goTypes = []any{
-	(*Join)(nil),            // 0: Join
-	(*Leave)(nil),           // 1: Leave
-	(*Chat)(nil),            // 2: Chat
-	(*ParticipantName)(nil), // 3: participantName
+	(*Join)(nil),             // 0: Join
+	(*Leave)(nil),            // 1: Leave
+	(*Chat)(nil),             // 2: Chat
+	(*ParticipantName)(nil),  // 3: participantName
+	(*RelevantChatInfo)(nil), // 4: relevantChatInfo
 }
 var file_proto_proto_depIdxs = []int32{
 	3, // 0: ChitChat.JoinChat:input_type -> participantName
-	0, // 1: ChitChat.JoinChat:output_type -> Join
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
+	4, // 1: ChitChat.SendMessage:input_type -> relevantChatInfo
+	0, // 2: ChitChat.JoinChat:output_type -> Join
+	2, // 3: ChitChat.SendMessage:output_type -> Chat
+	2, // [2:4] is the sub-list for method output_type
+	0, // [0:2] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -291,7 +350,7 @@ func file_proto_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_proto_rawDesc), len(file_proto_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
