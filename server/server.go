@@ -66,7 +66,6 @@ func main() {
 	if err != nil {
 		log.Fatalf("Lorte program det virker ikke")
 	}
-	NewServer()
 	grpcServer := grpc.NewServer()
 	svc := NewServer()
 
