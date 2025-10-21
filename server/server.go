@@ -70,7 +70,6 @@ func (s *ChitChatDatabase) Chat(stream proto.ChitChat_ChatServer) error {
 	clientId := fmt.Sprintf("%p", stream)
 
 	chatIn, _ := stream.Recv()
-<<<<<<< HEAD
 
 	// update server logical clock to highest value of own and received clock
 	remoteClock := chatIn.GetLs()
@@ -79,10 +78,7 @@ func (s *ChitChatDatabase) Chat(stream proto.ChitChat_ChatServer) error {
 	// increment server logical clock on recieve
 	ClockIncrement()
 
-	newClient := &Client{
-=======
 	currClient := &Client{
->>>>>>> a09fcda34d433c8bfcbe413ba5258faaa74649f2
 		id:   clientId,
 		name: chatIn.GetSender(),
 		send: make(chan *proto.ChatOut, 32),
@@ -101,16 +97,13 @@ func (s *ChitChatDatabase) Chat(stream proto.ChitChat_ChatServer) error {
 		if err != nil {
 			return err
 		}
-<<<<<<< HEAD
 		// increment before sending
 		ClockIncrement()
-=======
 		txt := strings.TrimSpace(in.Text)
 		if txt == ".exit" {
 			s.removeClient(currClient)
 			return nil
 		}
->>>>>>> a09fcda34d433c8bfcbe413ba5258faaa74649f2
 		out := &proto.ChatOut{
 			Sender: in.Sender,
 			Text:   in.Text,

@@ -42,7 +42,12 @@ func main() {
 				return
 			}
 			// add msg to buffer
+			fmt.Println("Received remoteTime to logicaltime ", msg.Ls, clientLogicalTime)
 			messageBuffer = append(messageBuffer, msg)
+
+			ClockIncrement()
+			LogicalClockCompare(msg.Ls)
+
 			sort.Slice(messageBuffer, func(i, j int) bool {
 				fmt.Println("sorted buffer")
 				return messageBuffer[i].Ls < messageBuffer[j].Ls
@@ -65,24 +70,18 @@ func main() {
 		name, _ := os.Hostname()
 		reader := bufio.NewReader(os.Stdin)
 		line, _ := reader.ReadString('\n')
-<<<<<<< HEAD
 
 		Streamer.Send(&proto.ChatIn{Sender: name, Text: line, Ls: clientLogicalTime})
-=======
-		Streamer.Send(&proto.ChatIn{Sender: name, Text: line})
-		
->>>>>>> a09fcda34d433c8bfcbe413ba5258faaa74649f2
 	}
 
 }
 
 func ClockIncrement() {
-	// Increment logical clock
+
 	clientLogicalTime = clientLogicalTime + 1
 }
 
 func LogicalClockCompare(remoteClock int64) {
-	// Initialize logical clock
 
 	clientLogicalTime = max(clientLogicalTime, remoteClock)
 
