@@ -14,7 +14,7 @@ import (
 
 func main() {
 
-	conn, err := grpc.NewClient(":5050", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.NewClient("172.20.10.2:5050", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("Not working")
 	}
@@ -22,8 +22,8 @@ func main() {
 	client := proto.NewChitChatClient(conn)
 
 	Streamer, err := client.Chat(context.Background())
-	// name, _ := os.Hostname()
-	// Streamer.Send(&proto.ChatIn{Sender: name, Text: "Joined"})
+	name, _ := os.Hostname()
+	Streamer.Send(&proto.ChatIn{Sender: name, Text: "Joined"})
 
 	if err != nil {
 		log.Fatalf("Not working")

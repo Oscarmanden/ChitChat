@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"strings"
 	"time"
 
 	"google.golang.org/grpc"
@@ -23,6 +24,12 @@ type Client struct {
 func (s *ChitChatDatabase) addClient(c *Client) {
 	fmt.Println(c.name, "has joined the Server")
 	s.clients[c.id] = c
+}
+
+func (s *ChitChatDatabase) removeClient(c *Client) {
+	fmt.Println(c.name, "has left the Server")
+	delete(s.clients, c.id)
+	close(c.send)
 }
 
 func NewServer() *ChitChatDatabase {
@@ -50,6 +57,12 @@ func (s *ChitChatDatabase) Chat(stream proto.ChitChat_ChatServer) error {
 		in, err := stream.Recv()
 		if err != nil {
 			return err
+		}
+		txt := strings.TrimSpace(in.Text)
+		if txt == ".exit" {
+			fmt.Println("Removing ", newClient.id)
+			s.removeClient(newClient)
+			return nil
 		}
 		out := &proto.ChatOut{
 			Sender: in.Sender,
