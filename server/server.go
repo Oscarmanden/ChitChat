@@ -10,6 +10,8 @@ import (
 	"google.golang.org/grpc"
 )
 
+var serverLogicalTime int64 = 0
+
 type ChitChatDatabase struct {
 	proto.UnimplementedChitChatServer
 	clients map[string]*Client
@@ -31,7 +33,16 @@ func NewServer() *ChitChatDatabase {
 
 func (s *ChitChatDatabase) Chat(stream proto.ChitChat_ChatServer) error {
 	clientId := fmt.Sprintf("%p", stream)
+
 	chatIn, _ := stream.Recv()
+
+	// update server logical clock to highest value of own and received clock
+	remoteClock := chatIn.GetLs()
+	LogicalClockCompare(remoteClock)
+
+	// increment server logical clock on recieve
+	ClockIncrement()
+
 	newClient := &Client{
 		id:   clientId,
 		name: chatIn.GetSender(),
@@ -51,10 +62,13 @@ func (s *ChitChatDatabase) Chat(stream proto.ChitChat_ChatServer) error {
 		if err != nil {
 			return err
 		}
+		// increment before sending
+		ClockIncrement()
 		out := &proto.ChatOut{
 			Sender: in.Sender,
 			Text:   in.Text,
 			Ts:     time.Now().Unix(),
+			Ls:     serverLogicalTime,
 		}
 
 		for _, c := range s.clients {
@@ -66,7 +80,7 @@ func (s *ChitChatDatabase) Chat(stream proto.ChitChat_ChatServer) error {
 }
 
 func main() {
-	listener, err := net.Listen("tcp", "0.0.0.0:5050")
+	listener, err := net.Listen("tcp", "localhost:5050")
 	if err != nil {
 		log.Fatalf("Lorte program det virker ikke", err)
 	}
@@ -79,4 +93,19 @@ func main() {
 	if err != nil {
 		log.Fatalf("pis hamrende lorte pgram det virker ikke")
 	}
+}
+
+func ClockIncrement() {
+	serverLogicalTime = serverLogicalTime + 1
+}
+
+func LogicalClockCompare(remoteClock int64) {
+	serverLogicalTime = max(serverLogicalTime, remoteClock)
+}
+
+func max(a, b int64) int64 {
+	if a > b {
+		return a
+	}
+	return b
 }

@@ -7,10 +7,14 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"sort"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
+
+// Logical Clock
+var clientLogicalTime int64 = 0
 
 func main() {
 
@@ -28,6 +32,8 @@ func main() {
 	if err != nil {
 		log.Fatalf("Not working")
 	}
+	messageBuffer := make([]*proto.ChatOut, 0)
+
 	go func() {
 		for {
 			msg, err := Streamer.Recv()
@@ -35,14 +41,51 @@ func main() {
 				fmt.Println(err)
 				return
 			}
-			fmt.Println(msg.Sender, "Said: ")
-			fmt.Println(">", msg.Text)
+			// add msg to buffer
+			messageBuffer = append(messageBuffer, msg)
+			sort.Slice(messageBuffer, func(i, j int) bool {
+				fmt.Println("sorted buffer")
+				return messageBuffer[i].Ls < messageBuffer[j].Ls
+
+			})
+
+			for _, msg := range messageBuffer {
+				fmt.Println(msg.Sender, "Said: ")
+				fmt.Println(">", msg.Text)
+			}
+			// clear buffer
+			messageBuffer = messageBuffer[:0]
 		}
+
 	}()
+
 	for {
+		// increment before sending
+		ClockIncrement()
 		name, _ := os.Hostname()
 		reader := bufio.NewReader(os.Stdin)
 		line, _ := reader.ReadString('\n')
-		Streamer.Send(&proto.ChatIn{Sender: name, Text: line})
+
+		Streamer.Send(&proto.ChatIn{Sender: name, Text: line, Ls: clientLogicalTime})
 	}
+
+}
+
+func ClockIncrement() {
+	// Increment logical clock
+	clientLogicalTime = clientLogicalTime + 1
+}
+
+func LogicalClockCompare(remoteClock int64) {
+	// Initialize logical clock
+
+	clientLogicalTime = max(clientLogicalTime, remoteClock)
+
+}
+
+func max(a, b int64) int64 {
+	if a > b {
+		return a
+	}
+	return b
 }

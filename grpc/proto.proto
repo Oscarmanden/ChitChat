@@ -4,12 +4,14 @@ option go_package = "ChitChat/grpc/proto";   //ændre simpleservice til ChitChat
 message ChatIn{
   string sender = 1;
   string text = 2;
+  int64 Ls = 3;
 }
 
 message ChatOut{
   string sender = 1;
   string text = 2;
   int64 ts = 3;
+  int64 Ls = 4; 
 }
 
 service ChitChat {
