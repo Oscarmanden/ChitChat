@@ -121,16 +121,16 @@ func (s *ChitChatDatabase) Chat(stream proto.ChitChat_ChatServer) error {
 
 func logClientMessage(component string, clientId string, eventType string) {
 	// [Client] ClientID; 025020502 [Joined] @ LS: 04:30:52
-	ts := time.Now().Format("2006-01-02 15:04:05")
-	fmt.Printf("[%s] ClientID; %s [%s] @ %s\n",
-		component, clientId, eventType, ts)
+	fmt.Printf("[%s] ClientID; %s [%s] @ LS: %d\n",
+		component, clientId, eventType, serverLogicalTime)
+	ClockIncrement()
 }
 
 func logServerMessage(component string, eventType string) {
 	// [Client] ClientID; 025020502 [Joined] @ LS: 04:30:52
-	ts := time.Now().Format("2006-01-02 15:04:05")
-	fmt.Printf("[%s] [%s] @ %s\n",
-		component, eventType, ts)
+	fmt.Printf("[%s] [%s] @ LS: %d\n",
+		component, eventType, serverLogicalTime)
+	ClockIncrement()
 }
 
 func main() {

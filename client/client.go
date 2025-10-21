@@ -42,21 +42,24 @@ func main() {
 				return
 			}
 			// add msg to buffer
-			fmt.Println("Received remoteTime to logicaltime ", msg.Ls, clientLogicalTime)
+			// fmt.Println("Received remoteTime and logicaltime ", msg.Ls, clientLogicalTime)
 			messageBuffer = append(messageBuffer, msg)
+			LogicalClockCompare(msg.Ls)
 
 			ClockIncrement()
-			LogicalClockCompare(msg.Ls)
+
+			//fmt.Println("Client LogicalClock after message:", clientLogicalTime)
 
 			sort.Slice(messageBuffer, func(i, j int) bool {
 				fmt.Println("sorted buffer")
 				return messageBuffer[i].Ls < messageBuffer[j].Ls
 
 			})
-
+			// dont print entire list for future
 			for _, msg := range messageBuffer {
 				fmt.Println(msg.Sender, "Said: ")
 				fmt.Println(">", msg.Text)
+
 			}
 			// clear buffer
 			messageBuffer = messageBuffer[:0]
