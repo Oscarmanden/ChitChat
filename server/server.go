@@ -15,11 +15,13 @@ type ChitChatDatabase struct {
 	clients map[string]*Client
 }
 type Client struct {
+	name string
 	id   string
 	send chan *proto.ChatOut
 }
 
 func (s *ChitChatDatabase) addClient(c *Client) {
+	fmt.Println(c.name, "has joined the Server")
 	s.clients[c.id] = c
 }
 
@@ -29,8 +31,10 @@ func NewServer() *ChitChatDatabase {
 
 func (s *ChitChatDatabase) Chat(stream proto.ChitChat_ChatServer) error {
 	clientId := fmt.Sprintf("%p", stream)
+	chatIn, _ := stream.Recv()
 	newClient := &Client{
 		id:   clientId,
+		name: chatIn.GetSender(),
 		send: make(chan *proto.ChatOut, 32),
 	}
 	s.addClient(newClient)
@@ -62,12 +66,13 @@ func (s *ChitChatDatabase) Chat(stream proto.ChitChat_ChatServer) error {
 }
 
 func main() {
-	listener, err := net.Listen("tcp", ":5050")
+	listener, err := net.Listen("tcp", "0.0.0.0:5050")
 	if err != nil {
-		log.Fatalf("Lorte program det virker ikke")
+		log.Fatalf("Lorte program det virker ikke", err)
 	}
 	grpcServer := grpc.NewServer()
 	svc := NewServer()
+	fmt.Println("Server started at ", time.Now())
 
 	proto.RegisterChitChatServer(grpcServer, svc)
 	err = grpcServer.Serve(listener)
