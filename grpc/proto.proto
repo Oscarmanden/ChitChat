@@ -1,5 +1,5 @@
 syntax = "proto3";
-option go_package = "ChitChat/grpc/proto";   //ændre simpleservice til ChitChat?
+option go_package = "ChitChat/grpc/proto";
 
 message ChatIn{
   string sender = 1;

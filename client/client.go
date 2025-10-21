@@ -26,8 +26,8 @@ func main() {
 	client := proto.NewChitChatClient(conn)
 
 	Streamer, err := client.Chat(context.Background())
-	// name, _ := os.Hostname()
-	// Streamer.Send(&proto.ChatIn{Sender: name, Text: "Joined"})
+	name, _ := os.Hostname()
+	Streamer.Send(&proto.ChatIn{Sender: name, Text: "Joined"})
 
 	if err != nil {
 		log.Fatalf("Not working")
@@ -65,8 +65,13 @@ func main() {
 		name, _ := os.Hostname()
 		reader := bufio.NewReader(os.Stdin)
 		line, _ := reader.ReadString('\n')
+<<<<<<< HEAD
 
 		Streamer.Send(&proto.ChatIn{Sender: name, Text: line, Ls: clientLogicalTime})
+=======
+		Streamer.Send(&proto.ChatIn{Sender: name, Text: line})
+		
+>>>>>>> a09fcda34d433c8bfcbe413ba5258faaa74649f2
 	}
 
 }
