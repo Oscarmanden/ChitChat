@@ -24,10 +24,11 @@ func main() {
 	}
 
 	client := proto.NewChitChatClient(conn)
-
 	Streamer, err := client.Chat(context.Background())
+
 	name, _ := os.Hostname()
-	Streamer.Send(&proto.ChatIn{Sender: name, Text: "Joined"})
+	onSend()
+	Streamer.Send(&proto.ChatIn{Sender: name, Text: "Joined", Ls: clientLogicalTime})
 
 	if err != nil {
 		log.Fatalf("Not working")
@@ -41,53 +42,39 @@ func main() {
 				fmt.Println(err)
 				return
 			}
+
+			onRecieve(msg.Ls)
 			// add msg to buffer
-			// fmt.Println("Received remoteTime and logicaltime ", msg.Ls, clientLogicalTime)
 			messageBuffer = append(messageBuffer, msg)
-			LogicalClockCompare(msg.Ls)
-
-			ClockIncrement()
-
-			//fmt.Println("Client LogicalClock after message:", clientLogicalTime)
 
 			sort.Slice(messageBuffer, func(i, j int) bool {
-				fmt.Println("sorted buffer")
 				return messageBuffer[i].Ls < messageBuffer[j].Ls
-
 			})
-			// dont print entire list for future
+
 			for _, msg := range messageBuffer {
 				fmt.Println(msg.Sender, "Said: ")
 				fmt.Println(">", msg.Text)
 
 			}
-			// clear buffer
-			messageBuffer = messageBuffer[:0]
 		}
 
 	}()
 
 	for {
-		// increment before sending
-		ClockIncrement()
 		name, _ := os.Hostname()
 		reader := bufio.NewReader(os.Stdin)
 		line, _ := reader.ReadString('\n')
-
+		onSend()
 		Streamer.Send(&proto.ChatIn{Sender: name, Text: line, Ls: clientLogicalTime})
 	}
 
 }
 
-func ClockIncrement() {
-
+func onSend() {
 	clientLogicalTime = clientLogicalTime + 1
 }
-
-func LogicalClockCompare(remoteClock int64) {
-
-	clientLogicalTime = max(clientLogicalTime, remoteClock)
-
+func onRecieve(remote int64) {
+	clientLogicalTime = max(clientLogicalTime, remote) + 1
 }
 
 func max(a, b int64) int64 {
