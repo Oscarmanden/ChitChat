@@ -36,6 +36,7 @@ func main() {
 	messageBuffer := make([]*proto.ChatOut, 0)
 
 	go func() {
+		printedCount := 0
 		for {
 			msg, err := Streamer.Recv()
 			if err != nil {
@@ -51,13 +52,12 @@ func main() {
 				return messageBuffer[i].Ls < messageBuffer[j].Ls
 			})
 
-			for _, msg := range messageBuffer {
+			for i := printedCount; i < len(messageBuffer); i++ {
 				fmt.Println(msg.Sender, "Said: ")
 				fmt.Println(">", msg.Text)
-
 			}
+			printedCount = len(messageBuffer)
 		}
-
 	}()
 
 	for {
